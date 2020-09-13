@@ -12,7 +12,7 @@ import com.sabkayar.praveen.recyclerview.databinding.WordlistItemBinding;
 
 import java.util.LinkedList;
 
-class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordListViewHolder> {
+class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordListViewHolder> implements View.OnClickListener {
     private LinkedList<String> mWordList;
 
     public void setWordList(LinkedList<String> wordList) {
@@ -22,9 +22,11 @@ class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordListViewH
 
     private LayoutInflater mLayoutInflater;
 
+    private OnClickListener mOnClickListener;
 
     public WordListAdapter(Context context, LinkedList<String> wordList) {
         mLayoutInflater = LayoutInflater.from(context);
+        mOnClickListener = (OnClickListener) context;
         mWordList = wordList;
     }
 
@@ -32,6 +34,7 @@ class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordListViewH
     @Override
     public WordListAdapter.WordListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = mLayoutInflater.inflate(R.layout.wordlist_item, parent, false);
+        view.setOnClickListener(this);
         return new WordListViewHolder(view, this);
     }
 
@@ -48,25 +51,37 @@ class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordListViewH
         return 0;
     }
 
-    class WordListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    @Override
+    public void onClick(View v) {
+        mOnClickListener.onClick(v);
+    }
+
+    class WordListViewHolder extends RecyclerView.ViewHolder /*implements View.OnClickListener*/ {
         private WordListAdapter mAdapter;
         private WordlistItemBinding mBinding;
+
         public WordListViewHolder(@NonNull View itemView, WordListAdapter adapter) {
             super(itemView);
-            mBinding=WordlistItemBinding.bind(itemView);
+            mBinding = WordlistItemBinding.bind(itemView);
             mAdapter = adapter;
+/*
             mBinding.word.setOnClickListener(this);
+*/
         }
 
         public void bind(String word) {
             mBinding.word.setText(word);
         }
 
-        @Override
+       /* @Override
         public void onClick(View v) {
             int currentPosition = getLayoutPosition();
             mWordList.set(currentPosition, String.format("%s %s", "Clicked", mWordList.get(currentPosition)));
             mAdapter.notifyDataSetChanged();
-        }
+        }*/
+    }
+
+    public interface OnClickListener {
+        void onClick(View view);
     }
 }

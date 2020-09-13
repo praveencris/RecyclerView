@@ -15,7 +15,7 @@ import com.sabkayar.praveen.recyclerview.databinding.ActivityMainBinding;
 
 import java.util.LinkedList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements WordListAdapter.OnClickListener {
     private WordListAdapter mWordListAdapter;
     private final LinkedList<String> mWordList = new LinkedList<>();
     private ActivityMainBinding mBinding;
@@ -78,5 +78,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View view) {
+        int itemPosition = mBinding.layoutContentMain.recyclerView.getChildAdapterPosition(view);
+        String item = mWordList.get(itemPosition);
+        mWordList.set(itemPosition, String.format("%s %s", "Clicked", item));
+        mWordListAdapter.setWordList(mWordList);
     }
 }
